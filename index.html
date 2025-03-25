@@ -340,6 +340,7 @@
         if (!isMobile) {
             // Change email button icon to copy icon
             document.getElementById('emailButton').addEventListener('mouseenter', function() {
+                document.querySelector('.email-dialog').style.visibility = 'visible';
                 const emailIcon = document.getElementById('emailIcon');
                 emailIcon.innerHTML = `<path d="M288 448L64 448l0-224 64 0 0-64-64 0c-35.3 0-64 28.7-64 64L0 448c0 35.3 28.7 64 64 64l224 0c35.3 0 64-28.7 64-64l0-64-64 0 0 64zm-64-96l224 0c35.3 0 64-28.7 64-64l0-224c0-35.3-28.7-64-64-64L224 0c-35.3 0-64 28.7-64 64l0 224c0 35.3 28.7 64 64 64z"/>`;
                 // Add smooth scale effect
@@ -357,15 +358,18 @@
         
         // Allow clicking the email button itself to copy
         document.getElementById('emailButton').addEventListener('click', function() {
-          navigator.clipboard.writeText(fullEmail).then(() => {
-                document.getElementById('emailText').innerText = 'Copied!';
-                if (!isMobile) {
-                    setTimeout(() => {
-                    document.getElementById('emailText').innerText = fullEmail;
-                    }, 1500);
-                }}).catch(err => {
-            console.error('Failed to copy!', err);
-          });
+            document.querySelector('.email-dialog').style.visibility = 'visible';
+            navigator.clipboard.writeText(fullEmail).then(() => {
+                    document.getElementById('emailText').innerText = 'Copied!';
+                        setTimeout(() => {
+                            document.querySelector('.email-dialog').style.visibility = 'hidden';
+                        if (!isMobile) {
+                            document.getElementById('emailText').innerText = fullEmail;
+                        }}, 1500);
+                    }).catch(err => {
+                console.error('Failed to copy!', err);
+            });
+
         });
       </script>
 </body>
