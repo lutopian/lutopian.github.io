@@ -198,7 +198,8 @@
             }
 
             .podcast-container {
-                padding: 1.5rem;
+                margin: 0 auto;
+                padding: 1rem;
             }
 
             .podcast-artwork {
@@ -334,21 +335,52 @@
         // Insert email into dialog text
         document.getElementById('emailText').innerText = fullEmail;
         
-        // Change email button icon to copy icon
-        document.getElementById('emailButton').addEventListener('mouseenter', function() {
-            const emailIcon = document.getElementById('emailIcon');
-            emailIcon.innerHTML = `<path d="M288 448L64 448l0-224 64 0 0-64-64 0c-35.3 0-64 28.7-64 64L0 448c0 35.3 28.7 64 64 64l224 0c35.3 0 64-28.7 64-64l0-64-64 0 0 64zm-64-96l224 0c35.3 0 64-28.7 64-64l0-224c0-35.3-28.7-64-64-64L224 0c-35.3 0-64 28.7-64 64l0 224c0 35.3 28.7 64 64 64z"/>`;
-            // Add smooth scale effect
-            emailIcon.style.transform = "scale(0.8)";
-        });
+        // Check if it's a mobile device
+        const isMobile = window.matchMedia("(max-width: 768px)").matches;
+        if (isMobile) {
+            // Remove hover-based dialog display
+            emailButton.addEventListener('click', function() {
+                navigator.clipboard.writeText(fullEmail).then(() => {
+                    // Create a temporary toast/alert for mobile
+                    const toast = document.createElement('div');
+                    toast.textContent = 'Email copied!';
+                    toast.style.position = 'fixed';
+                    toast.style.bottom = '70px';
+                    toast.style.left = '50%';
+                    toast.style.transform = 'translateX(-50%)';
+                    toast.style.backgroundColor = 'rgba(0,0,0,0.7)';
+                    toast.style.color = 'white';
+                    toast.style.padding = '10px 15px';
+                    toast.style.borderRadius = '5px';
+                    toast.style.zIndex = '1000';
+                    
+                    document.body.appendChild(toast);
 
-        // Change copy button icon back to email icon
-        document.getElementById('emailButton').addEventListener('mouseleave', function() {
-            const emailIcon = document.getElementById('emailIcon');
-            emailIcon.innerHTML = `<path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/>`;
-            // Revert scale and opacity for smooth transition back
-            emailIcon.style.transform = "scale(1)";
-        });
+                    // Remove toast after 2 seconds
+                    setTimeout(() => {
+                        document.body.removeChild(toast);
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy!', err);
+                });
+            });
+        } else {
+            // Change email button icon to copy icon
+            document.getElementById('emailButton').addEventListener('mouseenter', function() {
+                const emailIcon = document.getElementById('emailIcon');
+                emailIcon.innerHTML = `<path d="M288 448L64 448l0-224 64 0 0-64-64 0c-35.3 0-64 28.7-64 64L0 448c0 35.3 28.7 64 64 64l224 0c35.3 0 64-28.7 64-64l0-64-64 0 0 64zm-64-96l224 0c35.3 0 64-28.7 64-64l0-224c0-35.3-28.7-64-64-64L224 0c-35.3 0-64 28.7-64 64l0 224c0 35.3 28.7 64 64 64z"/>`;
+                // Add smooth scale effect
+                emailIcon.style.transform = "scale(0.8)";
+            });
+
+            // Change copy button icon back to email icon
+            document.getElementById('emailButton').addEventListener('mouseleave', function() {
+                const emailIcon = document.getElementById('emailIcon');
+                emailIcon.innerHTML = `<path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/>`;
+                // Revert scale and opacity for smooth transition back
+                emailIcon.style.transform = "scale(1)";
+            });
+        }
         
         // Allow clicking the email button itself to copy
         document.getElementById('emailButton').addEventListener('click', function() {
