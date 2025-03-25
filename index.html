@@ -385,7 +385,7 @@
         // Allow clicking the email button itself to copy
         document.getElementById('emailButton').addEventListener('click', function() {
           navigator.clipboard.writeText(fullEmail).then(() => {
-            if (isMobile) {
+            if (!isMobile) {
                 document.getElementById('emailText').innerText = 'Copied!';
                 setTimeout(() => {
                 document.getElementById('emailText').innerText = fullEmail;
