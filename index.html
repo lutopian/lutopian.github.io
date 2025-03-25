@@ -385,11 +385,12 @@
         // Allow clicking the email button itself to copy
         document.getElementById('emailButton').addEventListener('click', function() {
           navigator.clipboard.writeText(fullEmail).then(() => {
-            document.getElementById('emailText').innerText = 'Copied!';
-            setTimeout(() => {
-              document.getElementById('emailText').innerText = fullEmail;
-            }, 1500);
-          }).catch(err => {
+            if (isMobile) {
+                document.getElementById('emailText').innerText = 'Copied!';
+                setTimeout(() => {
+                document.getElementById('emailText').innerText = fullEmail;
+                }, 1500);
+            }}).catch(err => {
             console.error('Failed to copy!', err);
           });
         });
