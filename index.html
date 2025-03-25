@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="If I Were" />
-    <link rel="manifest" href="site.webmanifest" />
+    <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any">
+    <link rel="icon" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="apple-mobile-web-app-title" content="If I Were">
+    
     <title>如果 走那條路</title>
     <style>
         body {
@@ -17,7 +18,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            overflow-x: hidden;
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
@@ -30,6 +32,8 @@
         .spotlight-top-left, 
         .spotlight-bottom-right {
             position: absolute;
+            max-width: 100%;
+            max-height: 100%;
             border-radius: 50%;
             filter: blur(120px);
             opacity: 0.5;
@@ -112,7 +116,8 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             max-width: 400px;
             width: 100%;
-            padding: 30px;
+            padding: 3rem;
+            margin: 2rem;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -164,6 +169,15 @@
         }
 
         @media (max-width: 480px) {
+            .podcast-container {
+                padding: 1.5rem;
+            }
+
+            .podcast-artwork {
+                width: 150px;
+                height: 150px;
+            }
+
             .platform-buttons {
                 flex-direction: column;
             }
@@ -171,6 +185,77 @@
             .platform-btn {
                 justify-content: center;
             }
+        }
+
+        /* Email Button and Dialog Styles */
+        .email-container {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .email-button {
+            background: #282828;
+            border: 2px solid #444;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 1;
+            transition: opacity .3s;
+        }
+        
+        .email-button:hover {
+            opacity: .75;
+        }
+        
+        .email-button svg {
+            fill: #E0E0E0;
+            width: 24px;
+            height: 24px;
+        }
+        
+        .email-dialog {
+            position: absolute;
+            bottom: 4rem; /* Adjusts dialog box position above button */
+            background: rgba(40, 40, 40, 0.9);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(100, 100, 100, 0.3);
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            color: #E0E0E0;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+
+            /* Keep hidden initially */
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: opacity 1s ease, transform 1s ease;
+            pointer-events: none;
+        }
+        
+        /* Show dialog on hover of container */
+        .email-container:hover .email-dialog {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        #emailIcon {
+            transition: transform 0.5s ease;
         }
     </style>
 </head>
@@ -200,5 +285,54 @@
             </a>
         </div>
     </div>
+    <!-- Email Button Container -->
+    <div class="email-container">
+        <div class="email-dialog">
+            <span id="emailText"></span>
+        </div>
+        <div class="email-button" id="emailButton">
+            <svg id="emailIcon" viewBox="0 0 512 512">
+                <path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        // Obfuscate email parts
+        const emailUser = atob('cG9kY2FzdA==');
+        const emailDomain = atob('Y3JlYXRvci5sdQ==');
+        const fullEmail = emailUser + "@" + emailDomain;
+        
+        // Insert email into dialog text
+        document.getElementById('emailText').innerText = fullEmail;
+        
+        // Change email button icon to copy icon
+        document.getElementById('emailButton').addEventListener('mouseenter', function() {
+            const emailIcon = document.getElementById('emailIcon');
+            emailIcon.innerHTML = `<path d="M288 448L64 448l0-224 64 0 0-64-64 0c-35.3 0-64 28.7-64 64L0 448c0 35.3 28.7 64 64 64l224 0c35.3 0 64-28.7 64-64l0-64-64 0 0 64zm-64-96l224 0c35.3 0 64-28.7 64-64l0-224c0-35.3-28.7-64-64-64L224 0c-35.3 0-64 28.7-64 64l0 224c0 35.3 28.7 64 64 64z"/>`;
+            // Add smooth scale effect
+            emailIcon.style.transform = "scale(0.8)";
+        });
+
+        // Change copy button icon back to email icon
+        document.getElementById('emailButton').addEventListener('mouseleave', function() {
+            const emailIcon = document.getElementById('emailIcon');
+            emailIcon.innerHTML = `<path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/>`;
+            // Revert scale and opacity for smooth transition back
+            emailIcon.style.transform = "scale(1)";
+        });
+        
+        // Allow clicking the email button itself to copy
+        document.getElementById('emailButton').addEventListener('click', function() {
+          navigator.clipboard.writeText(fullEmail).then(() => {
+            document.getElementById('emailText').innerText = 'Copied!';
+            setTimeout(() => {
+              document.getElementById('emailText').innerText = fullEmail;
+            }, 1500);
+          }).catch(err => {
+            console.error('Failed to copy!', err);
+          });
+        });
+      </script>
 </body>
 </html>
