@@ -74,9 +74,18 @@
         }
 
         /* Grainy Noise Effect */
+        .noise, .overlay {
+            position: fixed; /* Change from absolute to fixed */
+            top: 0;
+            left: 0;
+            width: 100vw; /* Use viewport width */
+            height: 100vh; /* Use viewport height */
+            max-width: 100%; /* Ensure it doesn't exceed screen width */
+            max-height: 100%; /* Ensure it doesn't exceed screen height */
+            overflow: hidden; /* Prevent any potential internal scrolling */
+        }
+
         .noise {
-            position: absolute;
-            inset: 0;
             background: 
                 linear-gradient(20deg, rgba(138, 43, 226, 0.15), transparent), 
                 url(https://grainy-gradients.vercel.app/noise.svg);
@@ -88,8 +97,6 @@
 
         /* Blend Mode Overlay */
         .overlay {
-            position: absolute;
-            inset: 0;
             background: rgba(255,255,255,0.5);
             mix-blend-mode: overlay;
             opacity: 0.1; /* Adjust for better blending */
