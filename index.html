@@ -283,7 +283,7 @@
             pointer-events: auto;
         }
 
-        #emailIcon {
+        #buttonIcon {
             transition: transform 0.5s ease;
         }
     </style>
@@ -296,14 +296,12 @@
     
     <div class="podcast-container">
         <div class="artwork-wrapper">
-            <img src="img/If I Were_1000.jpg" alt="Podcast Album Art" class="podcast-artwork">
+            <img src="img/If I Were_1000.jpg" alt="Podcast Artwork" class="podcast-artwork">
         </div>
         
         <h1 class="podcast-title">如果 走那條路</h1>
         
-        <p class="podcast-description">
-            在回顧與想像中，陪你一起好好過馬路
-        </p>
+        <p class="podcast-description">在回顧與想像中，陪你一起好好過馬路</p>
         
         <div class="platform-buttons">
             <a href="https://podcasts.apple.com/tw/podcast/%E5%A6%82%E6%9E%9C-%E8%B5%B0%E9%82%A3%E6%A2%9D%E8%B7%AF/id1791353385" class="platform-btn">
@@ -314,13 +312,13 @@
             </a>
         </div>
     </div>
-    <!-- Email Button Container -->
+
     <div class="email-container">
         <div class="email-dialog">
             <span id="emailText"></span>
         </div>
         <div class="email-button" id="emailButton">
-            <svg id="emailIcon" viewBox="0 0 512 512">
+            <svg id="buttonIcon" viewBox="0 0 512 512">
                 <path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/>
             </svg>
         </div>
@@ -330,46 +328,45 @@
         // Obfuscate email parts
         const emailUser = atob('cG9kY2FzdA==');
         const emailDomain = atob('Y3JlYXRvci5sdQ==');
-        const fullEmail = emailUser + "@" + emailDomain;
+        const fullEmail = `${emailUser}@${emailDomain}`;
+        const emailDialog = document.querySelector('.email-dialog');
+        const dialogText = document.getElementById('emailText');
+        const buttonIcon = document.getElementById('buttonIcon');
+        const isMobile = window.matchMedia("(max-width: 768px)").matches;
+        const emailIcon = '<path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/>';
+        const copyIcon = '<path d="M288 448L64 448l0-224 64 0 0-64-64 0c-35.3 0-64 28.7-64 64L0 448c0 35.3 28.7 64 64 64l224 0c35.3 0 64-28.7 64-64l0-64-64 0 0 64zm-64-96l224 0c35.3 0 64-28.7 64-64l0-224c0-35.3-28.7-64-64-64L224 0c-35.3 0-64 28.7-64 64l0 224c0 35.3 28.7 64 64 64z"/>';
         
         // Insert email into dialog text
-        document.getElementById('emailText').innerText = fullEmail;
+        dialogText.innerText = fullEmail;
         
-        // Check if it's a mobile device
-        const isMobile = window.matchMedia("(max-width: 768px)").matches;
         if (!isMobile) {
             // Change email button icon to copy icon
             document.getElementById('emailButton').addEventListener('mouseenter', function() {
-                document.querySelector('.email-dialog').style.visibility = 'visible';
-                const emailIcon = document.getElementById('emailIcon');
-                emailIcon.innerHTML = `<path d="M288 448L64 448l0-224 64 0 0-64-64 0c-35.3 0-64 28.7-64 64L0 448c0 35.3 28.7 64 64 64l224 0c35.3 0 64-28.7 64-64l0-64-64 0 0 64zm-64-96l224 0c35.3 0 64-28.7 64-64l0-224c0-35.3-28.7-64-64-64L224 0c-35.3 0-64 28.7-64 64l0 224c0 35.3 28.7 64 64 64z"/>`;
-                // Add smooth scale effect
-                emailIcon.style.transform = "scale(0.8)";
+                emailDialog.style.visibility = 'visible';
+                buttonIcon.innerHTML = copyIcon;
+                buttonIcon.style.transform = "scale(0.8)";
             });
 
             // Change copy button icon back to email icon
             document.getElementById('emailButton').addEventListener('mouseleave', function() {
-                const emailIcon = document.getElementById('emailIcon');
-                emailIcon.innerHTML = `<path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/>`;
-                // Revert scale and opacity for smooth transition back
-                emailIcon.style.transform = "scale(1)";
+                buttonIcon.innerHTML = emailIcon;
+                buttonIcon.style.transform = "scale(1)";
             });
         }
         
         // Allow clicking the email button itself to copy
         document.getElementById('emailButton').addEventListener('click', function() {
-            document.querySelector('.email-dialog').style.visibility = 'visible';
+            emailDialog.style.visibility = 'visible';
             navigator.clipboard.writeText(fullEmail).then(() => {
-                    document.getElementById('emailText').innerText = 'Copied!';
+                dialogText.innerText = 'Copied!';
                         setTimeout(() => {
-                            document.querySelector('.email-dialog').style.visibility = 'hidden';
+                            emailDialog.style.visibility = 'hidden';
                         if (!isMobile) {
-                            document.getElementById('emailText').innerText = fullEmail;
+                            dialogText.innerText = fullEmail;
                         }}, 1500);
                     }).catch(err => {
                 console.error('Failed to copy!', err);
             });
-
         });
       </script>
 </body>
